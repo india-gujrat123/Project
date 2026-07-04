@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Student Attendance Record</title>
+
+<style>
+body{
+    margin:0;
+    padding:20px;
+    font-family:Arial,sans-serif;
+    background:linear-gradient(135deg,#4f46e5,#06b6d4);
+    min-height:100vh;
+}
+
+.container{
+    max-width:1200px;
+    margin:auto;
+    background:white;
+    padding:25px;
+    border-radius:20px;
+    box-shadow:0 10px 25px rgba(0,0,0,0.2);
+}
+
+h1{
+    text-align:center;
+    color:#4f46e5;
+}
+
+.info{
+    margin:20px 0;
+    padding:15px;
+    background:#f3f4f6;
+    border-radius:10px;
+}
+
+table{
+    width:100%;
+    border-collapse:collapse;
+    margin-top:20px;
+}
+
+th{
+    background:#4f46e5;
+    color:white;
+    padding:12px;
+}
+
+td{
+    padding:10px;
+    text-align:center;
+    border-bottom:1px solid #ddd;
+}
+
+.present{
+    color:green;
+    font-weight:bold;
+}
+
+.absent{
+    color:red;
+    font-weight:bold;
+}
+
+button{
+    margin-top:15px;
+    padding:12px 25px;
+    border:none;
+    border-radius:12px;
+    background:linear-gradient(135deg,#4f46e5,#06b6d4);
+    color:white;
+    font-size:16px;
+    font-weight:bold;
+    cursor:pointer;
+    transition:0.3s;
+}
+
+button:hover{
+    transform:translateY(-3px);
+    box-shadow:0 6px 15px rgba(0,0,0,0.25);
+}
+
+
+</style>
+
+</head>
+<body>
+
+<div class="container">
+
+    <h1>Attendance Record</h1>
+
+    <div class="info">
+        <h3>Date: <span id="showDate"></span></h3>
+    </div>
+
+    <table id="attendanceTable">
+    </table>
+
+</div>
+
+<button onclick="window.location.href='report.html'">
+View Last 30 Days Report
+</button>
+
+<script>
+
+// Date
+document.getElementById("showDate").textContent =
+localStorage.getItem("attendance_date") || "Not Available";
+
+// Attendance History
+let history =
+JSON.parse(localStorage.getItem("attendanceHistory")) || [];
+
+let table =
+document.getElementById("attendanceTable");
+
+if(history.length === 0){
+
+    table.innerHTML =
+    "<tr><td>No Attendance Data Found</td></tr>";
+
+}
+else{
+
+    // Latest submitted attendance
+    let history =
+JSON.parse(localStorage.getItem("attendanceHistory")) || [];
+
+let table =
+document.getElementById("attendanceTable");
+
+if(history.length === 0){
+
+    table.innerHTML =
+    "<tr><td>No Attendance Data Found</td></tr>";
+
+}
+else{
+
+    // Unique Subjects
+    let subjects =
+    [...new Set(history.map(x => x.subject))];
+
+    // Header
+    let header =
+    "<tr><th>Roll No</th>";
+
+    subjects.forEach(subject=>{
+        header += `<th>${subject}</th>`;
+    });
+
+    header += "</tr>";
+
+    table.innerHTML = header;
+
+    let totalStudents =
+    history[0].attendance.length;
+
+    for(let i=0; i<totalStudents; i++){
+
+        let row = `<tr><td>${i+1}</td>`;
+
+        subjects.forEach(subject=>{
+
+            // Is subject ka latest record nikalo
+            let subjectRecords =
+            history.filter(
+                x => x.subject === subject
+            );
+
+            let latest =
+            subjectRecords[
+                subjectRecords.length - 1
+            ];
+
+            let status =
+            latest.attendance[i];
+
+            row += `
+            <td class="${
+                status === "P"
+                ? "present"
+                : "absent"
+            }">
+                ${
+                    status === "P"
+                    ? "Present"
+                    : "Absent"
+                }
+            </td>`;
+        });
+
+        row += "</tr>";
+
+        table.innerHTML += row;
+    }
+}
+
+}
+
+</script>
+</body>
+</html>
