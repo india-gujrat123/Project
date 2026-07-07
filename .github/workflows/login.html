@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Attendance Management System</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:'Poppins',sans-serif;
+}
+
+body{
+    min-height:100vh;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    background:linear-gradient(135deg,#4f46e5,#06b6d4);
+}
+
+.container{
+    width:900px;
+    background:rgba(255,255,255,0.1);
+    backdrop-filter:blur(15px);
+    border-radius:20px;
+    padding:40px;
+    box-shadow:0 10px 30px rgba(0,0,0,0.2);
+}
+
+.title{
+    text-align:center;
+    color:white;
+    margin-bottom:30px;
+}
+
+.title h1{
+    font-size:36px;
+}
+
+.title p{
+    font-size:15px;
+    opacity:0.9;
+}
+
+.cards{
+    display:flex;
+    gap:30px;
+    justify-content:center;
+    flex-wrap:wrap;
+}
+
+.card{
+    width:350px;
+    background:white;
+    border-radius:20px;
+    padding:30px;
+    box-shadow:0 8px 20px rgba(0,0,0,0.1);
+    transition:0.3s;
+}
+
+.card:hover{
+    transform:translateY(-8px);
+}
+
+.card h2{
+    text-align:center;
+    margin-bottom:20px;
+    color:#4f46e5;
+}
+
+.input-group{
+    margin-bottom:15px;
+}
+
+.input-group label{
+    display:block;
+    margin-bottom:6px;
+    font-size:14px;
+    font-weight:500;
+}
+
+.input-group input{
+    width:100%;
+    padding:12px;
+    border:1px solid #ccc;
+    border-radius:10px;
+    outline:none;
+}
+
+.input-group input:focus{
+    border-color:#4f46e5;
+}
+
+.btn{
+    width:100%;
+    padding:12px;
+    border:none;
+    border-radius:10px;
+    background:#4f46e5;
+    color:white;
+    font-size:16px;
+    cursor:pointer;
+}
+
+.btn:hover{
+    background:#3730a3;
+}
+
+.icon{
+    text-align:center;
+    font-size:50px;
+    margin-bottom:15px;
+}
+
+.error{
+    color:red;
+    margin-top:10px;
+    text-align:center;
+    font-size:14px;
+}
+
+@media(max-width:800px){
+    .container{
+        width:95%;
+    }
+
+    .card{
+        width:100%;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <div class="title">
+        <h1>Attendance Management System</h1>
+        <p>Faculty and Student Login Portal</p>
+    </div>
+
+    <div class="cards">
+
+        <!-- Faculty Login -->
+        <div class="card">
+
+            <div class="icon">👨‍🏫</div>
+
+            <h2>Faculty Login</h2>
+
+            <form id="adminForm">
+
+                <div class="input-group">
+                    <label>Faculty ID</label>
+                    <input type="text" id="admin_user" required>
+                </div>
+
+                <div class="input-group">
+                    <label>Password</label>
+                    <input type="password" id="admin_pass" required>
+                </div>
+
+                <button class="btn" type="submit">
+                    Login as Faculty
+                </button>
+
+                <p id="adminMsg" class="error"></p>
+
+            </form>
+
+        </div>
+
+        <!-- Student Login -->
+        <div class="card">
+
+            <div class="icon">🎓</div>
+
+            <h2>Student Login</h2>
+
+            <form id="studentForm">
+
+                <div class="input-group">
+                    <label>Enrollment Number</label>
+                    <input type="text" id="studentUser" required>
+                </div>
+
+                <div class="input-group">
+                    <label>Password</label>
+                    <input type="password" id="studentPass" required>
+                </div>
+
+                <button class="btn" type="submit">
+                    Login as Student
+                </button>
+
+                <p id="studentMsg" class="error"></p>
+
+            </form>
+
+        </div>
+
+    </div>
+
+</div>
+
+<script>
+
+// Faculty Accounts
+const admins = [
+    { username: "admin1", password: "admin123" },
+    { username: "admin2", password: "secure456" },
+    { username: "admin3", password: "panel789" }
+];
+
+// Student Accounts
+const students = [
+    { username: "student1", password: "stu123" },
+    { username: "student2", password: "learn456" },
+    { username: "student3", password: "class789" }
+];
+
+// Faculty Login
+document.getElementById("adminForm").addEventListener("submit", function(e){
+
+    e.preventDefault();
+
+    const username = document.getElementById("admin_user").value;
+    const password = document.getElementById("admin_pass").value;
+
+    const validAdmin = admins.find(user =>
+        user.username === username &&
+        user.password === password
+    );
+
+    if(validAdmin){
+        window.location.href = "faculty.html";
+    }
+    else{
+        document.getElementById("adminMsg").textContent =
+        "Faculty ID or Password is wrong!";
+    }
+
+});
+
+// Student Login
+document.getElementById("studentForm").addEventListener("submit", function(e){
+
+    e.preventDefault();
+
+    const username = document.getElementById("studentUser").value;
+    const password = document.getElementById("studentPass").value;
+
+    const validStudent = students.find(user =>
+        user.username === username &&
+        user.password === password
+    );
+
+    if(validStudent){
+        window.location.href = "student.html";
+    }
+    else{
+        document.getElementById("studentMsg").textContent =
+        "Enrollment Number or Password is wrong!";
+    }
+
+});
+
+</script>
+
+</body>
+</html>

@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>30 Days Attendance Report</title>
+
+<style>
+body{
+    margin:0;
+    padding:20px;
+    font-family:Arial,sans-serif;
+    background:linear-gradient(135deg,#4f46e5,#06b6d4);
+    min-height:100vh;
+}
+
+.container{
+    max-width:1400px;
+    margin:auto;
+    background:white;
+    padding:25px;
+    border-radius:20px;
+    box-shadow:0 10px 25px rgba(0,0,0,0.2);
+    overflow-x:auto;
+}
+
+h1{
+    text-align:center;
+    color:#4f46e5;
+}
+
+table{
+    width:100%;
+    border-collapse:collapse;
+    margin-top:20px;
+}
+
+th{
+    background:#4f46e5;
+    color:white;
+    padding:12px;
+}
+
+td{
+    padding:10px;
+    text-align:center;
+    border:1px solid #ddd;
+}
+
+tr:nth-child(even){
+    background:#f7f7f7;
+}
+
+tr:hover{
+    background:#e0f2fe;
+}
+
+.percent{
+    color:green;
+    font-weight:bold;
+}
+
+
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+
+<h1>Last 30 Days Attendance Report</h1>
+
+<table id="reportTable"></table>
+
+</div>
+
+<script>
+
+// Student Names
+let students = [
+    "Prajapati Urvish",
+    "Aasodiya Dvij",
+    "Nayak Jay",
+    "Patel Om",
+    "Barot Aryan",
+    "Rabari Parth",
+    "Rabari Minnat",
+    "Raval Jayesh",
+    "Raval Hitesh",
+    "Raval Dipen",
+    "Thakor Hardik",
+    "Prajapati Harshit",
+    "Makwana Jaydeep",
+    "Patel Preet",
+    "Prajapati Deversh",
+    "Dabhi Vishal",
+    "Pathan Aspak",
+    "Ubhodiya Anshuman",
+    "Choudhary Jay",
+    "Darji Shubham",
+    "Solanki Chirag",
+    "Solanki Siddhraj"
+];
+
+let history =
+JSON.parse(localStorage.getItem("attendanceHistory")) || [];
+
+let table =
+document.getElementById("reportTable");
+
+if(history.length === 0){
+
+    table.innerHTML =
+    "<tr><td>No Attendance Records Found</td></tr>";
+
+}
+else{
+
+    let subjects =
+    [...new Set(history.map(x => x.subject))];
+
+    let header =
+    "<tr><th>Roll No</th><th>Student Name</th>";
+
+    subjects.forEach(subject=>{
+        header += `<th>${subject}</th>`;
+    });
+
+    header += "<th>Overall %</th></tr>";
+
+    table.innerHTML = header;
+
+    students.forEach((student,index)=>{
+
+        let row =
+        `<tr>
+            <td>${index+1}</td>
+            <td>${student}</td>`;
+
+        let totalPresent = 0;
+        let totalClasses = 0;
+
+        subjects.forEach(subject=>{
+
+            let subjectRecords =
+            history.filter(
+                x => x.subject === subject
+            );
+
+            let present = 0;
+
+            subjectRecords.forEach(record=>{
+
+                totalClasses++;
+
+                if(
+                    record.attendance[index]
+                    === "P"
+                ){
+                    present++;
+                    totalPresent++;
+                }
+
+            });
+
+            let percent =
+            subjectRecords.length > 0
+            ? ((present /
+               subjectRecords.length)*100)
+               .toFixed(1)
+            : 0;
+
+            row += `
+            <td>
+            ${present}/${subjectRecords.length}
+            <br>
+            <span class="percent">
+            ${percent}%
+            </span>
+            </td>`;
+        });
+
+        let overall =
+        totalClasses > 0
+        ? ((totalPresent /
+            totalClasses)*100)
+            .toFixed(1)
+        : 0;
+
+        row += `
+        <td class="percent">
+        ${overall}%
+        </td>
+        </tr>`;
+
+        table.innerHTML += row;
+    });
+}
+</script>
+
+</body>
+</html>
